@@ -1,0 +1,8 @@
+[tool.ruff]
+line-length = 140
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["B008"]  # FastAPI dependency defaults
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

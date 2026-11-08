@@ -1,0 +1,16 @@
+{
+  "buildCommand": "cd frontend && npm ci && npm run build",
+  "outputDirectory": "frontend/dist",
+  "installCommand": "echo skip",
+  "functions": {
+    "api/index.py": {
+      "maxDuration": 30,
+      "includeFiles": "backend/{app,artifacts,data}/**",
+      "excludeFiles": "{frontend/**,docs/**,backend/tests/**,backend/.venv/**,backend/scripts/**}"
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
+}
