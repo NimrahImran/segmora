@@ -3,7 +3,9 @@
 html{background:var(--bg)}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
-button,input,select{font:inherit;color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+input::placeholder,textarea::placeholder{color:var(--muted)}
+input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus,textarea:-webkit-autofill,select:-webkit-autofill{-webkit-text-fill-color:var(--ink);caret-color:var(--ink);-webkit-box-shadow:0 0 0 1000px var(--panel) inset;box-shadow:0 0 0 1000px var(--panel) inset;transition:background-color 99999s}
 button{cursor:pointer;background:none;border:0}
 button:disabled{opacity:.45;cursor:not-allowed}
 :focus-visible{outline:2px solid var(--bronze);outline-offset:2px}
@@ -171,7 +173,8 @@ dd{margin:0;color:var(--head);font-weight:600;text-align:right}
 .two-lists ul{margin:12px 0 0;padding:0;list-style:none}
 .two-lists li{padding:8px 0;border-top:1px solid var(--line);color:var(--soft)}
 .offer{background:var(--panel2);border-radius:20px;padding:24px;margin-bottom:16px}
-.message{white-space:pre-line;margin:16px 0 18px;font-size:18px}
+.message{white-space:pre-line;margin:16px 0 8px;font-size:18px}
+.hint{margin-bottom:16px}
 .about{max-width:760px}
 .about p{margin-top:20px;font-size:19px;color:var(--soft)}
 .about .lede{color:var(--head);margin-top:0}

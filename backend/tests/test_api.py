@@ -178,7 +178,7 @@ def test_persona_only_sends_averages():
         def json(self):
             import json
             payload = {"story": "s", "day": "d", "likes": ["a"], "frustrations": ["b"],
-                       "offer": {"subject": "x", "email": "y", "whatsapp": "z"}}
+                       "offer": {"subject": "x", "email": "y [your offer]", "whatsapp": "z [your offer]"}}
             return {"candidates": [{"content": {"parts": [{"text": json.dumps(payload)}]}}]}
 
     def fake_post(url, headers, json, timeout):
@@ -223,7 +223,7 @@ def test_persona_tries_the_next_model_when_one_is_retired():
 
     import httpx
     tried = []
-    payload = {"story": "s", "day": "d", "likes": ["a"], "frustrations": ["b"], "offer": {"subject": "x", "email": "y", "whatsapp": "z"}}
+    payload = {"story": "s", "day": "d", "likes": ["a"], "frustrations": ["b"], "offer": {"subject": "x", "email": "y [your offer]", "whatsapp": "z [your offer]"}}
 
     def fake_post(url, headers, json, timeout):
         tried.append(url)
@@ -239,3 +239,15 @@ def test_persona_tries_the_next_model_when_one_is_retired():
         s.return_value.gemini_api_key, s.return_value.gemini_model = "k", "old-model, new-model"
         assert persona.make(segment, "")["source"] == "gemini"
     assert len(tried) == 2 and "new-model" in tried[1]
+
+
+def test_built_in_messages_never_claim_an_offer_exists():
+    for profile in persona.BUILT_IN.values():
+        text = " ".join(profile["offer"].values()).lower()
+        assert persona.PLACEHOLDER in profile["offer"]["email"] and persona.PLACEHOLDER in profile["offer"]["whatsapp"]
+        assert not any(word in text for word in ("new collection", "gift", "discount", "ends this week"))
+
+
+def test_ai_message_without_placeholder_is_rejected():
+    good = {"story": "s", "day": "d", "likes": [], "frustrations": []}
+    assert not persona._valid({**good, "offer": {"subject": "x", "email": "New collection is live", "whatsapp": "Sale now"}})

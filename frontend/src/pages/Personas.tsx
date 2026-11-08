@@ -54,6 +54,7 @@ export default function Personas() {
                   <button role="tab" aria-selected={channel === 'email'} className={channel === 'email' ? 'on' : ''} onClick={() => { setChannel('email'); setCopied(false) }}>Email</button>
                 </div></div>
               <p className="message">{message}</p>
+              <p className="muted small hint">Replace [your offer] with your real offer before sending.</p>
               <button className="primary small" onClick={copy}>{copied ? 'Copied' : 'Copy message'}</button>
             </div>
             <p className="muted small">{p.source === 'gemini' ? 'Written by AI from the group averages. Lifestyle details are an informed guess.' : 'Standard profile. Lifestyle details are an informed guess, not measured.'}</p>
