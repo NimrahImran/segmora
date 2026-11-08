@@ -223,7 +223,8 @@ def test_persona_tries_the_next_model_when_one_is_retired():
 
     import httpx
     tried = []
-    payload = {"story": "s", "day": "d", "likes": ["a"], "frustrations": ["b"], "offer": {"subject": "x", "email": "y [your offer]", "whatsapp": "z [your offer]"}}
+    payload = {"story": "s", "day": "d", "likes": ["a"], "frustrations": ["b"],
+               "offer": {"subject": "x", "email": "y [your offer]", "whatsapp": "z [your offer]"}}
 
     def fake_post(url, headers, json, timeout):
         tried.append(url)
