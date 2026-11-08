@@ -3,7 +3,7 @@
 <h1 align="center">Segmora</h1>
 <p align="center"><strong>See who your customers really are.</strong></p>
 <p align="center">Customer segmentation with an interactive 3D view, plain-language explanations and a ready-to-use profile for every group.</p>
-<p align="center"><a href="LIVE_URL">Live demo</a> &nbsp;&nbsp; <a href="LIVE_URL/api/docs">API docs</a></p>
+<p align="center"><a href="https://segmora.vercel.app">Live demo</a> &nbsp;&nbsp; <a href="https://segmora.vercel.app/api/docs">API docs</a></p>
 
 ---
 
