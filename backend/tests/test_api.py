@@ -219,8 +219,9 @@ def test_slider_calls_are_not_blocked_by_upload_limit(client):
 
 
 def test_persona_tries_the_next_model_when_one_is_retired():
-    import httpx
     import json as jsonlib
+
+    import httpx
     tried = []
     payload = {"story": "s", "day": "d", "likes": ["a"], "frustrations": ["b"], "offer": {"subject": "x", "email": "y", "whatsapp": "z"}}
 
