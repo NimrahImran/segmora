@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     allowed_origins: str = "http://localhost:5173"
     allowed_origin_regex: str = ""
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-flash-latest"
+    gemini_model: str = "gemini-2.5-flash"
     gmail_user: str = ""
     gmail_app_password: str = ""
     max_upload_mb: int = 4  # Vercel Functions accept request bodies up to 4.5 MB

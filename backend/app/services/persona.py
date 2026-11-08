@@ -77,12 +77,16 @@ def _ask_gemini(segment: dict, facts: list[dict]) -> dict | None:
             f"https://generativelanguage.googleapis.com/v1beta/models/{settings.gemini_model}:generateContent",
             headers={"x-goog-api-key": settings.gemini_api_key},
             json={"contents": [{"parts": [{"text": prompt}]}],
-                  "generationConfig": {"responseMimeType": "application/json", "temperature": 0.7}},
-            timeout=30,
+                  "generationConfig": {"responseMimeType": "application/json", "temperature": 0.7,
+                                       "maxOutputTokens": 900, "thinkingConfig": {"thinkingBudget": 0}}},
+            timeout=20,  # stays under the 30 second function limit, so the built-in profile can still be returned
         )
         res.raise_for_status()
         data = json.loads(res.json()["candidates"][0]["content"]["parts"][0]["text"])
         return data if _valid(data) else None
+    except httpx.HTTPStatusError as exc:
+        log.warning("persona generation failed: HTTP %s", exc.response.status_code)
+        return None
     except Exception as exc:  # the page must still work when the free quota runs out
         log.warning("persona generation failed: %s", type(exc).__name__)
         return None
