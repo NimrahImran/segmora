@@ -61,7 +61,7 @@ p{margin:0}
 .hire form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .hire label{display:block;color:var(--soft);font-size:15.5px}
 .hire .wide{grid-column:1/-1}
-.hire input,.hire textarea{display:block;width:100%;margin-top:6px;padding:13px 14px;background:var(--panel);border:1px solid var(--line2);border-radius:14px;resize:vertical}
+.hire input,.hire textarea{color:var(--ink);display:block;width:100%;margin-top:6px;padding:13px 14px;background:var(--panel);border:1px solid var(--line2);border-radius:14px;resize:vertical}
 .hire .trap{position:absolute;left:-9999px;width:1px;height:1px}
 .wide-btn{grid-column:1/-1;justify-self:start}
 .sent{font-family:var(--serif);font-size:26px;color:var(--bronze);align-self:center}

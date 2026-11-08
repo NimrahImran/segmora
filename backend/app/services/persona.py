@@ -44,7 +44,8 @@ BUILT_IN = {
 }
 SCHEMA_HINT = ('{"story": "2 sentences", "day": "1 sentence: a typical moment with the brand", '
                '"likes": ["3 short items"], "frustrations": ["2 short items"], '
-               '"offer": {"subject": "...", "email": "2 sentences with [your offer]", "whatsapp": "1-2 sentences with [your offer]"}}')
+               '"offer": {"subject": "...", "email": "2 sentences with [your offer]", '
+               '"whatsapp": "1-2 sentences with [your offer]"}}')
 
 
 def observed(segment: dict, currency: str) -> list[dict]:
