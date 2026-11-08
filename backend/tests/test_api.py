@@ -216,3 +216,25 @@ def test_model_card(client):
 
 def test_slider_calls_are_not_blocked_by_upload_limit(client):
     assert all(client.post("/api/predict", json=CUSTOMER).status_code == 200 for _ in range(60))
+
+
+def test_persona_tries_the_next_model_when_one_is_retired():
+    import httpx
+    import json as jsonlib
+    tried = []
+    payload = {"story": "s", "day": "d", "likes": ["a"], "frustrations": ["b"], "offer": {"subject": "x", "email": "y", "whatsapp": "z"}}
+
+    def fake_post(url, headers, json, timeout):
+        tried.append(url)
+        request = httpx.Request("POST", url)
+        if "old" in url:
+            return httpx.Response(404, request=request)
+        return httpx.Response(200, request=request, json={"candidates": [{"content": {"parts": [{"text": jsonlib.dumps(payload)}]}}]})
+
+    segment = {"key": "deal", "name": "D", "tagline": "t", "customer_share": .25, "revenue_share": .03, "customers": 9,
+               "medians": {"orders": 1}}
+    persona._cache.clear()
+    with patch.object(persona, "get_settings") as s, patch.object(persona.httpx, "post", fake_post):
+        s.return_value.gemini_api_key, s.return_value.gemini_model = "k", "old-model, new-model"
+        assert persona.make(segment, "")["source"] == "gemini"
+    assert len(tried) == 2 and "new-model" in tried[1]

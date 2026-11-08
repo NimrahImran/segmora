@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import logging
+import time
 
 import httpx
 
@@ -72,24 +73,29 @@ def _ask_gemini(segment: dict, facts: list[dict]) -> dict | None:
         f"Measured facts: {json.dumps(facts)}. Write in plain, warm English that a non-technical shop owner "
         "understands. Do not invent numbers, ages, names or genders. Return only JSON in this shape: " + SCHEMA_HINT
     )
-    try:
-        res = httpx.post(
-            f"https://generativelanguage.googleapis.com/v1beta/models/{settings.gemini_model}:generateContent",
-            headers={"x-goog-api-key": settings.gemini_api_key},
-            json={"contents": [{"parts": [{"text": prompt}]}],
-                  "generationConfig": {"responseMimeType": "application/json", "temperature": 0.7,
-                                       "maxOutputTokens": 900, "thinkingConfig": {"thinkingBudget": 0}}},
-            timeout=20,  # stays under the 30 second function limit, so the built-in profile can still be returned
-        )
-        res.raise_for_status()
-        data = json.loads(res.json()["candidates"][0]["content"]["parts"][0]["text"])
-        return data if _valid(data) else None
-    except httpx.HTTPStatusError as exc:
-        log.warning("persona generation failed: HTTP %s", exc.response.status_code)
-        return None
-    except Exception as exc:  # the page must still work when the free quota runs out
-        log.warning("persona generation failed: %s", type(exc).__name__)
-        return None
+    deadline = time.monotonic() + 24  # the function limit is 30 seconds; leave room for the built-in profile
+    for model in [m.strip() for m in settings.gemini_model.split(",") if m.strip()]:
+        left = deadline - time.monotonic()
+        if left < 3:
+            break
+        try:
+            res = httpx.post(
+                f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+                headers={"x-goog-api-key": settings.gemini_api_key},
+                json={"contents": [{"parts": [{"text": prompt}]}],
+                      "generationConfig": {"responseMimeType": "application/json", "temperature": 0.7}},
+                timeout=min(left, 12),
+            )
+            res.raise_for_status()
+            data = json.loads(res.json()["candidates"][0]["content"]["parts"][0]["text"])
+            if _valid(data):
+                return data
+            log.warning("persona from %s had the wrong shape", model)
+        except httpx.HTTPStatusError as exc:  # retired, busy or over quota: try the next model
+            log.warning("persona model %s failed: HTTP %s", model, exc.response.status_code)
+        except Exception as exc:  # the page must still work if every model is unavailable
+            log.warning("persona model %s failed: %s", model, type(exc).__name__)
+    return None
 
 
 _cache: dict[str, dict] = {}  # per warm instance, saves free-tier quota
