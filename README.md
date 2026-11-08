@@ -3,6 +3,7 @@
 <h1 align="center">Segmora</h1>
 <p align="center"><strong>See who your customers really are.</strong></p>
 <p align="center">Customer segmentation with an interactive 3D view, plain-language explanations and a ready-to-use profile for every group.</p>
+<p align="center"><a href="https://github.com/NimrahImran/segmora/actions/workflows/ci.yml"><img src="https://github.com/NimrahImran/segmora/actions/workflows/ci.yml/badge.svg" alt="CI status"></a></p>
 <p align="center"><a href="https://segmora.vercel.app">Live demo</a> &nbsp;&nbsp; <a href="https://segmora.vercel.app/api/docs">API docs</a></p>
 
 ---
